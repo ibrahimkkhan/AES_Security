@@ -1,6 +1,8 @@
 package src;
 import java.util.*;
 
+import src.Substitute;
+
 
 
 public class AES {
@@ -11,16 +13,23 @@ public class AES {
     public static void main(String[] args) {
         //System.out.println("Hello World!");
         Encrypt(plainTextO);
+        
     }
 
     public static void Encrypt(String plainText){
+        Substitute s = new Substitute();
         byte [][] ptMatrix = new byte [4][4];
         byte [][] keyMatrix = new byte [4][4];
+        byte [][] addRoundMatrix = new byte [4][4];
+        byte [][] substituteMatrix = new byte [4][4];
+        
         ptMatrix = divideIntoBlocks(plainText);
         keyMatrix = divideIntoBlocks(key);
         //keyExpansion(); //! To be implemented
-        addRoundKey(ptMatrix, keyMatrix);
+        addRoundMatrix = addRoundKey(ptMatrix, keyMatrix);
         
+        s.populateTable();
+        s.substitute_bytes(addRoundMatrix);
     }
 
     public static byte[][] divideIntoBlocks(String text){
