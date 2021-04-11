@@ -14,23 +14,43 @@ public class AES {
     }
 
     public static void Encrypt(String plainText){
-        ptIntoBlocks(plainText);
-        
+        byte [][] ptMatrix = new byte [4][4];
+        byte [][] keyMatrix = new byte [4][4];
+        ptMatrix = divideIntoBlocks(plainText);
+        keyMatrix = divideIntoBlocks(key);
         //keyExpansion(); //! To be implemented
+        addRoundKey(ptMatrix, keyMatrix);
+        
     }
 
-    public static byte[][] ptIntoBlocks(String plainText){
-        byte [][] ptBlock = new byte [4][4];
+    public static byte[][] divideIntoBlocks(String text){
+        byte [][] matrix = new byte [4][4];
         int index = 0;
 
         for(int row = 0; row < 4 ; row++){
             for (int col = 0; col < 4; col++){
-                ptBlock[col][row] = (byte) plainText.charAt(index++);
+                matrix[col][row] = (byte) text.charAt(index++);
             }
         }
 
-        System.out.println(ptBlock[3][3]);
-        return ptBlock;
+        System.out.println(matrix[0][0]);
+        return matrix;
+    }
+
+    public static byte[][] addRoundKey(byte[][] ptMatrix,  byte[][] keyMatrix){
+        byte [][] round_matrix = new byte [4][4];
+
+        for(int row = 0; row < 4 ; row++){
+            for (int col = 0; col < 4; col++){
+                byte pt_temp = ptMatrix[col][row];
+                byte key_temp = keyMatrix[col][row];
+                byte b = (byte) ((pt_temp ^ key_temp) & 0x000000ff);
+                round_matrix[col][row] = b;
+            }
+        }
+
+        System.out.println(round_matrix[0][0]);
+        return round_matrix;
     }
 
 }
