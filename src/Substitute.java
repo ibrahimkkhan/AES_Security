@@ -33,7 +33,7 @@ public class Substitute {
         // }
     }
 
-    public byte[][] substitute_bytes(byte[][] table){ //populate predetermined table()
+    public byte[][] substituteBytes(byte[][] table){ //populate predetermined table()
         
         for(int i = 0; i < 4; i++){
             for(int j = 0; j < 4; j++){

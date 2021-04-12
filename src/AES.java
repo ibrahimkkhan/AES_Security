@@ -22,14 +22,29 @@ public class AES {
         byte [][] keyMatrix = new byte [4][4];
         byte [][] addRoundMatrix = new byte [4][4];
         byte [][] substituteMatrix = new byte [4][4];
-        
+        //byte [][] shiftRowMatrix = new byte [4][4];
+
         ptMatrix = divideIntoBlocks(plainText);
         keyMatrix = divideIntoBlocks(key);
+
         //keyExpansion(); //! To be implemented
+        
         addRoundMatrix = addRoundKey(ptMatrix, keyMatrix);
         
         s.populateTable();
-        s.substitute_bytes(addRoundMatrix);
+        substituteMatrix = s.substituteBytes(addRoundMatrix);
+        
+
+        System.out.println(Arrays.deepToString(substituteMatrix));
+        /* The second row is moved one space to the left, the third row is moved two spaces to the left, 
+        and the fourth row is moved three spaces to the left.*/
+        shiftRow(substituteMatrix[1], 1);
+        shiftRow(substituteMatrix[2], 2);
+        shiftRow(substituteMatrix[3], 3);
+        System.out.println("After");
+        System.out.println(Arrays.deepToString(substituteMatrix));
+
+
     }
 
     public static byte[][] divideIntoBlocks(String text){
@@ -61,5 +76,22 @@ public class AES {
         System.out.println(round_matrix[0][0]);
         return round_matrix;
     }
+
+    public static void shiftRow(byte[] row, int k) {
+        k = k % row.length;
+        int count = 0;
+        for (int start = 0; count < row.length; start++) {
+          int current = start;
+          byte prev = row[start];
+          do {
+            int next = (current + k) % row.length;
+            byte temp = row[next];
+            row[next] = prev;
+            prev = temp;
+            current = next;
+            count++;
+          } while (start != current);
+        }
+      }
 
 }
